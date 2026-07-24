@@ -1,0 +1,28 @@
+[settings]
+# 当运行 mise 任务时，自动加载项目中的 .env 文件（可选）
+# experimental = true
+
+[tools]
+rust = "nightly"
+
+# 通过 cargo 安装的工具（mise 的 cargo 插件会执行 cargo install）
+"cargo:cargo-leptos" = "latest"   # Leptos 前端构建工具
+"cargo:wasm-bindge" = "latest"
+
+# 注意：lld 和 clang 是系统级依赖，无法通过 mise 跨平台统一管理，
+# 请按平台手动安装（Linux: llvm/clang，macOS: Xcode Command Line Tools，Windows: LLVM）。
+
+[env]
+# 可在此添加项目所需的环境变量，例如：
+# RUSTFLAGS = "-C target-feature=+crt-static"
+# 或设置代理等
+
+[tasks]
+# 初始化开发环境：安装 Rust 组件、添加目标、安装工具
+setup = """
+  echo "🔧 正在安装 Rust 组件..."
+  rustup component add rustfmt clippy rust-src rust-analyzer
+  echo "🌍 正在添加编译目标..."
+  rustup target add x86_64-unknown-linux-gnu wasm32-unknown-unknown x86_64-pc-windows-msvc
+  echo "✅ 环境准备完毕！"
+"""
