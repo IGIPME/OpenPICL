@@ -1,0 +1,48 @@
+# Rust build artifacts
+target/
+**/target/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+.dockerignore
+docker-compose.yml
+Dockerfile
+
+# Documentation
+README.md
+LICENSE
+
+# End-to-end tests
+end2end/
+node_modules/
+**/node_modules/
+
+# Misc
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
+
+# Nix/Flakes
+flake.nix
+flake.lock
+.direnv/
+
+# Mise
+mise.toml
+.mise.toml
+
+# Just
+justfile

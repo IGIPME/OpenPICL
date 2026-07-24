@@ -1,0 +1,50 @@
+services:
+  open-picl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Uncomment the following to use BuildKit for faster builds
+      # args:
+      #   BUILDKIT_INLINE_CACHE: 1
+    image: open-picl:latest
+    container_name: open-picl
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - LEPTOS_OUTPUT_NAME=open-picl
+      - LEPTOS_SITE_ROOT=site
+      - LEPTOS_SITE_PKG_DIR=pkg
+      - LEPTOS_SITE_ADDR=0.0.0.0:3000
+      - LEPTOS_RELOAD_PORT=3001
+      - LEPTOS_ASSETS_DIR=public
+      - LEPTOS_ENV=PROD
+      # Rust logging
+      - RUST_LOG=info
+      - RUST_BACKTRACE=0
+    # Uncomment to use host networking (useful for some VPS)
+    # network_mode: host
+    # Uncomment to mount volumes for development
+    # volumes:
+    #   - ./target/site:/opt/open-picl/site
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    # Resource limits (adjust based on your server)
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
+        reservations:
+          memory: 128M
+          cpus: "0.5"
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
