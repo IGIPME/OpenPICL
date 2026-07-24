@@ -5,40 +5,27 @@ export RUST_BACKTRACE := "1"
 @just:
     just --list
 
-#
+# 安装 mise 工具
 [windows]
 mise:
     choco install mise
 
-#
+# 安装 mise 工具
 [unix]
 mise:
     curl https://mise.run | sh
 
-#
+# 安装依赖
 init:
     mise install
 
-#
-[windows]
-assets:
-    mkdir build
-    Copy-Item -Path "./public" -Destination "./build/public" -Recurse -Force
-
-#
-[unix]
-assets:
-    mkdir build
-    cp -r ./public ./build/public
-
-# 启动 Leptos 前端（通过 Trunk 工具），默认不自动打开页面
+# 启动 Leptos 前端
 serve:
-    trunk serve
+    cargo leptos watch
 
-#
+# 构建 OpenPICL 项目
 build:
-    trunk build --release
-    tar -czvf OpenPICL.tar.gz build
+    cargo leptos build --release
 
 # 清理构建产物（Windows）
 [windows]

@@ -1,6 +1,13 @@
 [workspace]
+members = [
+    "app",
+    "frontend",
+    "server",
+    "protocol",
+    "renderer",
+    "worker",
+]
 resolver = "2"
-members = ["app", "frontend", "server"]
 
 [workspace.package]
 version = "0.1.0"
@@ -32,6 +39,8 @@ tokio = { version = "1.45.0", features = ["full"] }
 tower = { version = "0.5.2", features = ["full"] }
 tower-http = { version = "0.6.4", features = ["full"] }
 wasm-bindgen = "0.2.126"
+
+wgpu = "30.0.0"
 
 # See https://github.com/leptos-rs/cargo-leptos for documentation of all the parameters.
 
