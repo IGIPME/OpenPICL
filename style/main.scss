@@ -1,3 +1,216 @@
+// 颜色变量
+$navbar-bg: #ffffff;
+$navbar-text: #333333;
+$navbar-border: #e0e0e0;
+$dropdown-bg: #ffffff;
+$dropdown-shadow: rgba(0, 0, 0, 0.1);
+
+// 深色主题
+$dark-navbar-bg: #1e1e1e;
+$dark-navbar-text: #f0f0f0;
+$dark-dropdown-bg: #2d2d2d;
+
+.navbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 2rem;
+	height: 64px;
+	background-color: $navbar-bg;
+	border-bottom: 1px solid $navbar-border;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+	position: sticky;
+	top: 0;
+	z-index: 100;
+
+	// 左侧
+	&-left {
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+
+		.logo-wrapper {
+			display: flex;
+			align-items: center;
+			a {
+				display: flex;
+				align-items: center;
+			}
+			img {
+				height: auto;
+				width: auto;
+			}
+		}
+
+		.nav-links {
+			display: flex;
+			gap: 1.2rem;
+			a {
+				color: $navbar-text;
+				text-decoration: none;
+				font-size: 0.95rem;
+				padding: 0.3rem 0;
+				border-bottom: 2px solid transparent;
+				transition: border-color 0.2s;
+				&:hover {
+					border-bottom-color: $navbar-text;
+				}
+				&.active {
+					border-bottom-color: $navbar-text;
+					font-weight: 500;
+				}
+			}
+		}
+	}
+
+	// 右侧
+	&-right {
+		display: flex;
+		align-items: center;
+		gap: 1.2rem;
+
+		.dropdown {
+			position: relative;
+
+			.dropdown-trigger {
+				background: transparent;
+				border: 1px solid $navbar-border;
+				border-radius: 6px;
+				padding: 0.3rem 0.8rem;
+				font-size: 0.9rem;
+				color: $navbar-text;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				gap: 0.3rem;
+				&:hover {
+					background: rgba(0, 0, 0, 0.04);
+				}
+				.arrow {
+					font-size: 0.6rem;
+					margin-left: 0.2rem;
+				}
+			}
+
+			.dropdown-menu {
+				position: absolute;
+				top: calc(100% + 8px);
+				right: 0;
+				min-width: 120px;
+				background: $dropdown-bg;
+				border: 1px solid $navbar-border;
+				border-radius: 8px;
+				box-shadow: 0 8px 20px $dropdown-shadow;
+				padding: 0.3rem 0;
+				display: flex;
+				flex-direction: column;
+				opacity: 0;
+				visibility: hidden;
+				transform: translateY(-8px);
+				transition: all 0.15s ease;
+				pointer-events: none;
+
+				&.open {
+					opacity: 1;
+					visibility: visible;
+					transform: translateY(0);
+					pointer-events: auto;
+				}
+
+				button {
+					background: none;
+					border: none;
+					padding: 0.5rem 1rem;
+					text-align: left;
+					font-size: 0.9rem;
+					color: $navbar-text;
+					cursor: pointer;
+					width: 100%;
+					&:hover {
+						background: rgba(0, 0, 0, 0.05);
+					}
+					&.active {
+						background: rgba(0, 0, 0, 0.08);
+						font-weight: 500;
+					}
+				}
+			}
+		}
+
+		.login-btn {
+			padding: 0.3rem 1.2rem;
+			border-radius: 6px;
+			border: 1px solid $navbar-text;
+			background: transparent;
+			color: $navbar-text;
+			font-size: 0.9rem;
+			cursor: pointer;
+			transition: all 0.2s;
+			&:hover {
+				background: $navbar-text;
+				color: $navbar-bg;
+			}
+			a {
+				color: inherit;
+				text-decoration: none;
+			}
+		}
+	}
+
+	// 响应式：小屏折叠
+	@media (max-width: 768px) {
+		padding: 0 1rem;
+		&-left {
+			.nav-links {
+				display: none;
+			}
+		}
+		&-right {
+			gap: 0.8rem;
+			.dropdown .dropdown-trigger {
+				padding: 0.2rem 0.5rem;
+				font-size: 0.8rem;
+			}
+			.login-btn {
+				padding: 0.2rem 0.8rem;
+				font-size: 0.8rem;
+			}
+		}
+	}
+}
+
+// 暗色主题占位（通过 body 类切换）
+body.dark-theme {
+	.navbar {
+		background-color: $dark-dropdown-bg;
+		border-color: #3a3a3a;
+		color: $dark-navbar-text;
+		.logo, .nav-links a, .dropdown-trigger, .login-btn {
+			color: $dark-navbar-text;
+		}
+		.dropdown-menu {
+			background: $dark-dropdown-bg;
+			border-color: #3a3a3a;
+			button {
+				color: $dark-navbar-text;
+				&:hover {
+					background: rgba(255, 255, 255, 0.05);
+				}
+				&.active {
+					background: rgba(255, 255, 255, 0.1);
+				}
+			}
+		}
+		.login-btn {
+			border-color: $dark-navbar-text;
+			&:hover {
+				background: $dark-navbar-text;
+				color: $dark-navbar-bg;
+			}
+		}
+	}
+}
+
 body {
 	font-family: sans-serif;
 	text-align: center;
