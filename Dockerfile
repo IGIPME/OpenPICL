@@ -113,7 +113,8 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry \
         exit 1; \
     fi && \
     echo "found server binary at: $SERVER_BIN" && \
-    file "$SERVER_BIN" && \
+    test -x "$SERVER_BIN" && \
+    ls -la "$SERVER_BIN" && \
     cp -a "$SERVER_BIN" /usr/local/bin/open-picl && \
     mkdir -p /export && cp -a target/site /export/site && cp -a public /export/public
 
