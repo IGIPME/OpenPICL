@@ -15,7 +15,12 @@ edition = "2024"
 authors = ["Solomon Captain"]
 license-file = "LICENSE"
 
-# need to be applied only to wasm build
+# Aggressive size optimization, intended for the WASM frontend build.
+# NOTE: cargo-leptos builds both the server (native) and client (wasm) with
+# `--release`, so both pick up this profile. The LTO link step would OOM the
+# build host; the Docker build instead overrides lto/codegen-units via
+# CARGO_PROFILE_RELEASE_* env vars (see Dockerfile) to keep a low memory peak
+# at the cost of a larger binary — acceptable for deployment builds.
 [profile.release]
 codegen-units = 1
 lto = true
