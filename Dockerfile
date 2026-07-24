@@ -81,39 +81,40 @@ COPY renderer/Cargo.toml ./renderer/
 COPY worker/Cargo.toml ./worker/
 COPY protocol/Cargo.toml ./protocol/
 
-# Create minimal dummy sources so cargo can resolve & pre-compile the dependency
-# graph (native server target) in a cached layer. cargo-leptos uses a separate
-# target dir (target/server) for the real build, so this warm-up is best-effort
-# caching of the shared dependency crates; skip lib/wasm warm-up here to save
-# memory and time.
-RUN mkdir -p app/src frontend/src server/src renderer/src worker/src protocol/src && \
-    echo 'pub fn dummy() {}' > app/src/lib.rs && \
-    echo '#[wasm_bindgen::prelude::wasm_bindgen] pub fn hydrate() {}' > frontend/src/lib.rs && \
-    echo 'fn main() {}' > server/src/main.rs && \
-    echo 'pub fn dummy() {}' > renderer/src/lib.rs && \
-    echo 'pub fn dummy() {}' > worker/src/lib.rs && \
-    echo 'pub fn dummy() {}' > protocol/src/lib.rs && \
-    mkdir -p style && touch style/main.scss && \
-    mkdir -p public
-
-# Pre-build server dependencies with the low-memory server profile.
-# dummy main.rs has no real code, so this only compiles the dependency crates —
-# the expensive part — and the layer is cached across source edits.
-RUN --mount=type=cache,target=/usr/local/cargo/registry \
-    --mount=type=cache,target=/build/target \
-    cargo build --release -p server
-
 # Now copy the actual source code and build the full project.
-# cargo-leptos handles: WASM compilation, wasm-bindgen, SCSS, and server binary.
+# cargo-leptos handles: WASM compilation, wasm-bindgen, SCSS, and the server
+# binary (the README's `target/server/release` path is NOT reliable: this
+# version of cargo-leptos builds the server bin into the default target dir
+# without `--target-dir`, so the binary may land at target/release/server,
+# target/server/release/server, or elsewhere depending on the tool version).
 COPY . .
 
-# Build artifacts out to a known location the runtime stage can COPY from.
-# (The cache mount is on /build/target, so we must persist the final binary and
-# site assets into the image layer itself.)
+# Build the project and extract artifacts into the image layer.
+#
+# A prior layer-caching trick (pre-compiling deps against dummy sources, then
+# reusing the build via a cache mount on /build/target) was removed: cargo-
+# leptos recompiles from a clean target dir on each service build regardless,
+# and a stale/dummy binary could otherwise leak into the image. The registry
+# cache is retained; the target cache is intentionally NOT mounted so each
+# build is reproducible and the correct (fresh) binary is produced.
+#
+# After building, locate the server binary with `find` to be robust to the
+# exact target-dir layout, verify it is the real binary (file type), and
+# export it plus the site assets. If the binary cannot be found, print the
+# candidate paths so the failure is diagnosable instead of a bare cp error.
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
-    --mount=type=cache,target=/build/target \
     cargo leptos build --release && \
-    cp -a target/server/release/server /usr/local/bin/open-picl && \
+    SERVER_BIN="$(find target -type f -name server -path '*/release/server' -exec test -x {} \; -print | head -1)" && \
+    if [ -z "$SERVER_BIN" ]; then \
+        echo "!! server binary not found; dumping candidate paths:"; \
+        find target -type f -name 'server' -print 2>/dev/null; \
+        echo "!! target/release listing:"; ls -la target/release 2>/dev/null; \
+        echo "!! target/server/release listing:"; ls -la target/server/release 2>/dev/null; \
+        exit 1; \
+    fi && \
+    echo "found server binary at: $SERVER_BIN" && \
+    file "$SERVER_BIN" && \
+    cp -a "$SERVER_BIN" /usr/local/bin/open-picl && \
     mkdir -p /export && cp -a target/site /export/site && cp -a public /export/public
 
 # -----------------------------------------------------------------------------
