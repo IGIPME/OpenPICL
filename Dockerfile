@@ -29,13 +29,18 @@ ENV RUST_BACKTRACE=1
 ENV CARGO_PROFILE_RELEASE_LTO=false
 ENV CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16
 
-# System dependencies for compilation (plus curl/ca-certs for the binary fetches)
+# System dependencies for compilation (plus curl/ca-certs for the binary fetches).
+# clang + lld are required: the repo's .cargo/config.toml forces clang as the
+# linker with `-fuse-ld=lld` for the native linux target (set up for the local
+# Nix/mise dev shell, which provides them). The base rust image only ships gcc.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     pkg-config \
     libssl-dev \
     curl \
     ca-certificates \
     build-essential \
+    clang \
+    lld \
     && rm -rf /var/lib/apt/lists/*
 
 # dart-sass for SCSS compilation (prebuilt binary — avoids a build from source)
