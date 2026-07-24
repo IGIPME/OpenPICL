@@ -2,6 +2,12 @@
 resolver = "2"
 members = ["app", "frontend", "server"]
 
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+authors = ["Solomon Captain"]
+license-file = "LICENSE"
+
 # need to be applied only to wasm build
 [profile.release]
 codegen-units = 1
