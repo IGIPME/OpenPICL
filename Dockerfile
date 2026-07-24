@@ -143,19 +143,21 @@ USER appuser
 WORKDIR /opt/open-picl
 
 # Leptos runtime configuration. LEPTOS_SITE_ADDR must bind 0.0.0.0 so the
-# container is reachable from Zeabur's proxy on the exposed port.
+# container is reachable from Zeabur's proxy. Zeabur routes external HTTP to
+# the service's web port (8080 by default), so bind 8080 (not the leptos
+# default 3000) to avoid a port-mismatch 502/404 at the proxy.
 ENV LEPTOS_OUTPUT_NAME="open-picl"
 ENV LEPTOS_SITE_ROOT="site"
 ENV LEPTOS_SITE_PKG_DIR="pkg"
-ENV LEPTOS_SITE_ADDR="0.0.0.0:3000"
+ENV LEPTOS_SITE_ADDR="0.0.0.0:8080"
 ENV LEPTOS_RELOAD_PORT="3001"
 ENV LEPTOS_ASSETS_DIR="public"
 ENV LEPTOS_ENV="PROD"
 ENV RUST_LOG="info"
 
-EXPOSE 3000
+EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:3000/ || exit 1
+    CMD curl -f http://localhost:8080/ || exit 1
 
 CMD ["open-picl"]
