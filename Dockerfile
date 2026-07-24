@@ -61,7 +61,7 @@ RUN rustup toolchain install nightly --profile minimal \
 ARG CARGO_LEPTOS_VERSION=v0.3.7
 RUN ARCH=$(uname -m) && \
     curl -fsSL "https://github.com/leptos-rs/cargo-leptos/releases/download/${CARGO_LEPTOS_VERSION}/cargo-leptos-${ARCH}-unknown-linux-gnu.tar.gz" \
-    | tar xz -C /usr/local/bin && \
+    | tar xz -C /usr/local/bin --strip-components=1 && \
     chmod +x /usr/local/bin/cargo-leptos && \
     cargo-leptos --version
 
