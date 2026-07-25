@@ -12,6 +12,9 @@ mod pages;
 use crate::components::Navbar;
 use crate::pages::HomePage;
 
+include!(concat!(env!("OUT_DIR"), "/i18n/mod.rs"));
+use i18n::*;
+
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
         <!DOCTYPE html>
@@ -39,19 +42,21 @@ pub fn App() -> impl IntoView {
         <Stylesheet id="leptos" href="/pkg/open-picl.css"/>
 
         // sets the document title
-        <Title text="Welcome to Leptos"/>
+        <Title text="OpenPICL | Open Photon Intelligence Comprehensive Laboratory"/>
 
         // content for this welcome page
-        <Router>
-            <Navbar/>
+        <I18nContextProvider>
+            <Router>
+                <Navbar/>
 
-            <main>
-                <Routes fallback=|| "Page not found.".into_view()>
-                    <Route path=StaticSegment("") view=HomePage/>
-                    <Route path=path!("/home") view=HomePage/>
-                    <Route path=path!("/login") view = || view! { <h1> 登录页 </h1> } />
-                </Routes>
-            </main>
-        </Router>
+                <main>
+                    <Routes fallback=|| "Page not found.".into_view()>
+                        <Route path=StaticSegment("") view=HomePage/>
+                        <Route path=path!("/home") view=HomePage/>
+                        <Route path=path!("/login") view = || view! { <h1> 登录页 </h1> } />
+                    </Routes>
+                </main>
+            </Router>
+        </I18nContextProvider>
     }
 }

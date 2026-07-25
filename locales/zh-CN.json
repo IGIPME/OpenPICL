@@ -1,0 +1,11 @@
+{
+    "nav_home": "主页",
+    "nav_docs": "文档",
+    "nav_github": "GitHub",
+    "nav_login": "登录",
+    "lang_zh": "简体中文",
+    "lang_en": "English",
+    "theme_light": "浅色",
+    "theme_dark": "深色",
+    "theme_system": "跟随系统"
+}
