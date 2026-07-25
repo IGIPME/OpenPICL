@@ -31,7 +31,11 @@ leptos = { version = "0.8.2", features = ["nightly"] }
 leptos_meta = { version = "0.8.2" }
 leptos_router = { version = "0.8.2", features = ["nightly"] }
 leptos_axum = { version = "0.8.2" }
-leptos_i18n = { version = "0.6.2", features = ["axum"] }
+# NOTE: do NOT enable i18n's `axum` feature here unconditionally — it forces
+# `ssr` (-> leptos/ssr), which breaks the `hydrate` client build (Router panics
+# "no RequestUrl provided" on hydration). The `axum` feature is enabled only
+# via the `app/ssr` feature for the server build.
+leptos_i18n = { version = "0.6.2", default-features = false }
 
 axum = "0.8.4"
 cfg-if = "1.0.0"

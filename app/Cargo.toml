@@ -11,7 +11,13 @@ leptos.workspace = true
 leptos_meta.workspace = true
 leptos_router.workspace = true
 leptos_axum = { workspace = true, optional = true }
-leptos_i18n = { workspace = true }
+# leptos_i18n's `axum` feature pulls in `ssr` (-> leptos/ssr), which is
+# incompatible with the `hydrate` client build: it makes <Router> take its
+# `cfg(ssr)` branch and panic with "no RequestUrl provided" on hydration.
+# The workspace dep has default-features = false (no `axum`), so re-enable
+# i18n's default features here (cookie, icu_compiled_data — needed by the
+# client), and add `axum` only via the `ssr` feature below.
+leptos_i18n = { workspace = true, default-features = true }
 
 http.workspace = true
 cfg-if.workspace = true
@@ -25,4 +31,10 @@ leptos_i18n_build = "0.6.2"
 [features]
 default = []
 hydrate = ["leptos/hydrate"]
-ssr = ["leptos/ssr", "leptos_meta/ssr", "leptos_router/ssr", "dep:leptos_axum"]
+ssr = [
+    "leptos/ssr",
+    "leptos_meta/ssr",
+    "leptos_router/ssr",
+    "dep:leptos_axum",
+    "leptos_i18n/axum",
+]

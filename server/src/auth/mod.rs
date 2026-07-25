@@ -34,10 +34,21 @@ impl AuthConfig {
         Self {
             endpoint: env_or("LOGTO_ENDPOINT", "https://ufrjei.logto.app"),
             client_id: env_or("LOGTO_APP_ID", "17trhj5ohcsqrgh6ht241"),
-            client_secret: std::env::var("LOGTO_APP_SECRET")
-                .expect("LOGTO_APP_SECRET must be set"),
-            redirect_uri: env_or("LOGTO_REDIRECT_URI", "http://localhost:3245/callback"),
-            post_logout_uri: env_or("LOGTO_POST_LOGOUT_URI", "http://localhost:3245"),
+            // The secret is the only value without a safe default. Fail with a
+            // clear message at the first request (not at server start) so a
+            // misconfigured instance still boots and serves the public pages,
+            // and the error is visible in logs rather than a bare panic.
+            client_secret: std::env::var("LOGTO_APP_SECRET").unwrap_or_else(|_| {
+                log::error!(
+                    "LOGTO_APP_SECRET is not set — Logto login will fail until it is provided"
+                );
+                String::new()
+            }),
+            // Default to the local dev server (leptos site-addr is 127.0.0.1:3000).
+            // In production set LOGTO_REDIRECT_URI / LOGTO_POST_LOGOUT_URI to the
+            // Zeabur URL (https://open-picl.zeabur.app[/callback]).
+            redirect_uri: env_or("LOGTO_REDIRECT_URI", "http://localhost:3000/callback"),
+            post_logout_uri: env_or("LOGTO_POST_LOGOUT_URI", "http://localhost:3000"),
         }
     }
 }
