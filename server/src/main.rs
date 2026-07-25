@@ -14,6 +14,9 @@ async fn main() {
     let routes = generate_route_list(App);
 
     let app = Router::new()
+        .route("/login", axum::routing::get(auth::login))
+        .route("/callback", axum::routing::get(auth::callback))
+        .route("/logout", axum::routing::get(auth::logout))
         .leptos_routes(&leptos_options, routes, {
             let leptos_options = leptos_options.clone();
             move || shell(leptos_options.clone())
@@ -29,3 +32,4 @@ async fn main() {
         .await
         .unwrap();
 }
+mod auth;

@@ -8,6 +8,7 @@ use leptos_router::{
 
 mod components;
 mod pages;
+pub mod auth;
 
 use crate::components::Navbar;
 use crate::pages::HomePage;
@@ -53,7 +54,6 @@ pub fn App() -> impl IntoView {
                     <Routes fallback=|| "Page not found.".into_view()>
                         <Route path=StaticSegment("") view=HomePage/>
                         <Route path=path!("/home") view=HomePage/>
-                        <Route path=path!("/login") view = || view! { <h1> 登录页 </h1> } />
                     </Routes>
                 </main>
             </Router>

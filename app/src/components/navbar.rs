@@ -8,6 +8,10 @@ use crate::i18n::Locale;
 pub fn Navbar() -> impl IntoView {
     let i18n = use_i18n();
 
+    let user = Resource::new_blocking(|| (), move |()| async {
+        crate::auth::get_current_user().await.ok().flatten()
+    });
+
     let (lang_open, set_lang_open) = signal(false);
     let (theme_open, set_theme_open) = signal(false);
     let current_lang = move || {
@@ -106,11 +110,24 @@ pub fn Navbar() -> impl IntoView {
                     </div>
                 </div>
 
-                <button class="login-btn">
-                    <A href="/login">
-                        {t!(i18n, nav_login)}
-                    </A>
-                </button>
+                {move || match user.get() {
+                    Some(Some(u)) => view! {
+                        <span class="user-name">
+                            {u.name.clone().unwrap_or_else(|| u.email.clone().unwrap_or(u.sub.clone()))}
+                        </span>
+                        <a class="logout-btn" href="/logout">
+                            {move || match i18n.get_locale() {
+                                Locale::zh_CN => "登出",
+                                Locale::en => "Logout",
+                            }}
+                        </a>
+                    }.into_any(),
+                    _ => view! {
+                        <a class="login-btn" href="/login">
+                            {t!(i18n, nav_login)}
+                        </a>
+                    }.into_any(),
+                }}
             </div>
         </nav>
     }
