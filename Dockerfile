@@ -154,9 +154,14 @@ ENV LEPTOS_RELOAD_PORT="3001"
 ENV LEPTOS_ASSETS_DIR="public"
 ENV LEPTOS_ENV="PROD"
 ENV RUST_LOG="info"
+# Non-secret Logto defaults baked into the image. The secret
+# (LOGTO_APP_SECRET) is intentionally NOT set here: an `ENV X=${X}` with no
+# preceding `ARG` resolves at build time, baking an empty string into the image
+# layer — which would then shadow a runtime variable on some runtimes. Instead
+# LOGTO_APP_SECRET is injected as a Zeabur runtime env var, which overrides any
+# image value. Set it in the Zeabur service environment.
 ENV LOGTO_ENDPOINT=https://ufrjei.logto.app
 ENV LOGTO_APP_ID=17trhj5ohcsqrgh6ht241
-ENV LOGTO_APP_SECRET=${LOGTO_APP_SECRET}
 ENV LOGTO_REDIRECT_URI=https://open-picl.zeabur.app/callback
 ENV LOGTO_POST_LOGOUT_URI=https://open-picl.zeabur.app
 
