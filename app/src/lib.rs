@@ -48,7 +48,9 @@ pub fn App() -> impl IntoView {
         // content for this welcome page
         <I18nContextProvider>
             <Router>
-                <Navbar/>
+                <Suspense fallback=move || view! { <div>Loading...</div> }>
+                    <Navbar />
+                </Suspense>
 
                 <main>
                     <Routes fallback=|| "Page not found.".into_view()>

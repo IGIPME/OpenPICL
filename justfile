@@ -21,6 +21,10 @@ init:
 
 # 启动 Leptos 前端
 serve:
+    cargo leptos serve
+
+# 启动 Leptos 前端，热重载
+reload:
     cargo leptos watch
 
 # 构建 OpenPICL 项目

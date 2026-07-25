@@ -116,10 +116,7 @@ pub fn Navbar() -> impl IntoView {
                             {u.name.clone().unwrap_or_else(|| u.email.clone().unwrap_or(u.sub.clone()))}
                         </span>
                         <a class="logout-btn" href="/logout">
-                            {move || match i18n.get_locale() {
-                                Locale::zh_CN => "登出",
-                                Locale::en => "Logout",
-                            }}
+                            {t!(i18n, nav_logout)}
                         </a>
                     }.into_any(),
                     _ => view! {
@@ -127,7 +124,7 @@ pub fn Navbar() -> impl IntoView {
                             {t!(i18n, nav_login)}
                         </a>
                     }.into_any(),
-                }}
+                }}                
             </div>
         </nav>
     }

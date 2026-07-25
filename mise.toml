@@ -7,7 +7,7 @@ rust = "nightly"
 
 # 通过 cargo 安装的工具（mise 的 cargo 插件会执行 cargo install）
 "cargo:cargo-leptos" = "latest"   # Leptos 前端构建工具
-"cargo:wasm-bindge" = "latest"
+"cargo:wasm-bindgen" = "latest"
 
 # 注意：lld 和 clang 是系统级依赖，无法通过 mise 跨平台统一管理，
 # 请按平台手动安装（Linux: llvm/clang，macOS: Xcode Command Line Tools，Windows: LLVM）。

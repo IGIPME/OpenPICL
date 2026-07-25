@@ -154,6 +154,12 @@ ENV LEPTOS_RELOAD_PORT="3001"
 ENV LEPTOS_ASSETS_DIR="public"
 ENV LEPTOS_ENV="PROD"
 ENV RUST_LOG="info"
+ENV LOGTO_ENDPOINT=https://ufrjei.logto.app
+ENV LOGTO_APP_ID=17trhj5ohcsqrgh6ht241
+ENV LOGTO_APP_SECRET=${LOGTO_APP_SECRET}
+ENV LOGTO_REDIRECT_URI=https://open-picl.zeabur.app/callback
+ENV LOGTO_POST_LOGOUT_URI=https://open-picl.zeabur.app
+
 
 EXPOSE 8080
 
