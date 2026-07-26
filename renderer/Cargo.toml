@@ -8,4 +8,4 @@ authors.workspace = true
 crate-type = ["rlib"]
 
 [dependencies]
-wgpu = { workspace = true }
+wgpu = { version = "30.0.0", default-features = false, features = ["webgpu", "wgsl"] }

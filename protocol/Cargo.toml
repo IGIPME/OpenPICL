@@ -8,3 +8,4 @@ authors.workspace = true
 crate-type = ["rlib"]
 
 [dependencies]
+serde = { version = "1", features = ["derive"] }

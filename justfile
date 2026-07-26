@@ -18,10 +18,15 @@ mise:
 # 安装依赖
 init:
     mise install
+    mise run setup
 
 # 启动 Leptos 前端
 serve:
     cargo leptos serve
+
+# 端到端测试（Playwright）
+end2end:
+    cargo leptos end-to-end
 
 # 启动 Leptos 前端，热重载
 reload:
